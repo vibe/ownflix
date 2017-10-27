@@ -58,4 +58,4 @@ typings/
 .env
 
 #remove chrome folder from repo
-.vscode/chrome/
+/client/.vscode/chrome/

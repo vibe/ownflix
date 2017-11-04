@@ -7,24 +7,31 @@ class MediaDB {
     this.provider = provider;
   }
   switchProvider(provider) {
-      this.provider = provider;
+    this.provider = provider;
   }
-  getPopularMovies({ page = 0}) {
-    return this.provider.getLatestMovies();
-    // return {
-    //     next:
-    //     movies
-    // }
+  getPopularMovies() {
+    return this.provider.getPopularMovies();
   }
-  getLatestMovies() {
-      return this.provider.getLatestMovies();
+  async getTopRated() {
+    return await this.provider.getTopRated();
   }
 }
 
 const provider = new Provider({ API_KEY });
 const mediaDB = new MediaDB({ provider });
 
-console.log(mediaDB.getPopularMovies());
+
+(async () => {
+  try {
+    const movies = await mediaDB.getPopularMovies(); //movies
+    const topRated = await mediaDB.getTopRated();
+  }
+  catch (e) {
+    console.log(e);
+  }
+
+    console.log('after');
+})();
 
 
 // const movies = mediaDB.getPopularMovies();

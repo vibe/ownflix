@@ -43,6 +43,10 @@ class TMDB {
                         console.log(response.data);
                     }) 
     }
+
+    async init() {
+        return 'test';
+    }
 }
 
 module.exports = TMDB;

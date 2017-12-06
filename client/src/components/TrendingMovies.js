@@ -1,19 +1,14 @@
 import React from 'react';
-import Movies from '../containers/movies';
+import WithMovies from '../containers/movies';
 
+const movies = movies => (
+    <div className="movies">
+        { movies.map(movies => <div>movie</div>) }
+    </div>
+);
 
 export default props => (
     <div className="TrendingMovies">
-        <Movies type="trending">
-           {
-                (movies, pending) => (
-                    movies.map((movie, i) => (
-                    <div key={i}>
-                    {pending ? 'pending' : 'not pending'} movie
-                    </div>
-                ))
-                )
-           }
-        </Movies>
+        <WithMovies type="trending" component={movies} />
     </div>
 )

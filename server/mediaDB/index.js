@@ -15,13 +15,10 @@ class MediaDB {
     const { provider } = this.provider;
     return provider.getPopular(type, options);
   }
-  async getPopularMovies() {
+
+  async getTrending(type, options) {
     const { provider } = this.provider;
-    return provider.getPopularMovies();
-  }
-  async getTopRated(type, options) {
-    const { provider } = this.provider;
-    return provider.getTopRated(options);
+    return provider.getTrending(type, options);
   }
   async init() {
     this.providers = await Promise.all(
@@ -33,25 +30,29 @@ class MediaDB {
 
 module.exports = MediaDB;
 
-(async () => {
-  try {
-    const TMDBProvider = new Provider({API_KEY});
+// (async () => {
+//   try {
+//     const TMDBProvider = new Provider({API_KEY});
     
-    const providers = [
-      { name: 'TMDB', provider: TMDBProvider },
-    ];
+//     const providers = [
+//       { name: 'TMDB', provider: TMDBProvider },
+//     ];
 
-    const mediaDB = await new MediaDB({ providers, defaultProvider: 'TMDB' }).init();
+//     const mediaDB = await new MediaDB({ providers, defaultProvider: 'TMDB' }).init();
 
-    const movies = await mediaDB.getPopular('movies', {
-      page: 2
-    });
-    const movies2 = await mediaDB.getTopRated('movies', {
-      page: 1
-    });
-    // console.log(movies2);
-  }
-  catch (e) {
-    console.log('Error Catcher: ', e);
-  }
-})();
+
+//     const movies = await mediaDB.getTrending('movies', {
+//       page: 1
+//     });
+
+//     const shows = await mediaDB.getTrending('shows', {
+//       page: 1
+//     });
+
+//     console.log('Movies: ', movies);
+//     console.log('Shows: ', shows);
+//   }
+//   catch (e) {
+//     console.log('Error Catcher: ', e);
+//   }
+// })();

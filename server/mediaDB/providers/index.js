@@ -1,5 +1,5 @@
-const tmdb = require('./tmdb');
+const TMDB = require('./tmdb');
 
 module.exports = {
-    tmdb
+    TMDB
 }

@@ -11,7 +11,7 @@ class Movies extends Component {
         this.props.fetchMovies(this.props.type);
     }
     render() {
-        return this.props.children(this.props.movies);
+        return this.props.component(this.props.movies);
     }
 }
 

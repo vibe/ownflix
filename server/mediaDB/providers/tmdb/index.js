@@ -102,24 +102,33 @@ class TMDB {
             ]
         };
     }
-    generateAPI(endpoint='', api_key, options=[]) {
-        if(!endpoint) { throw { message: 'GenerateAPI: No endpoint path provided for api generation'}};
-        if(!api_key) { throw { message: 'GenerateAPI: Requires an api key'}}
-        return options.reduce((apiUrl, option) => {
-            return `${apiUrl}&${option.key}=${option.value}`;
-        }, `${this.API_URL}${endpoint}?api_key=${api_key}`);
-    };
 
     async getPopular(type, options = { page: 1, adult: false }) {
         switch(type) {
             case 'movies':
                 return this.getPopularMovies(options);
             break;
+            case 'shows':
+                return this.getPopularShows(options);
             default: 
                 throw { message: 'Whoops does not match a valid media type!' };
             break;
         }
     }
+
+    async getTrending(type, options = { page: 1, adult: false}) {
+        switch(type) {
+            case 'movies': 
+                return this.getTrendingMovies(options); 
+            case 'shows':
+                return this.getTrendingShows(options);
+            break;
+            default: 
+                throw { message: 'getTrending: Whoops does not match a valid media type!' };
+            break;
+        }
+    }
+
     async getPopularMovies(options = { page: 1, adult: false }) {
         const { page, adult } = options;
         const apiRoute = this.generateAPI('movie/popular', this.API_KEY, [
@@ -129,13 +138,31 @@ class TMDB {
         return movies;
     }
 
-    async getTopRated(options = { page: 1, adult: false }) {
+    async getPopularShows(options = { page: 1, adult: false }) {
+        const { page, adult } = options;
+        const apiRoute = this.generateAPI('tv/popular', this.API_KEY, [
+            { key: 'page', value: page }
+        ])
+        const shows = await axios.get(apiRoute).then(response => adult ? response.data.results : response.data.results.filter(show => !show.adult));
+        return shows;
+    }
+
+    async getTrendingMovies(options = { page: 1, adult: false }) {
         const { page, adult } = options;
         const apiRoute = this.generateAPI('movie/top_rated', this.API_KEY, [
             { key: 'page', value: page }            
-        ])
+        ]);
         const movies = await axios.get(apiRoute).then(response => adult ? response.data.results : response.data.results.filter(movie => !movie.adult));
         return movies;
+    }
+
+    async getTrendingShows(options = { page: 1, adult: false }) {
+        const { page, adult } = options;
+        const apiRoute = this.generateAPI('tv/top_rated', this.API_KEY, [
+            { key: 'page', value: page }
+        ]);
+        const shows = await axios.get(apiRoute).then(response => adult ? response.data.results : response.data.results.filter(show => !show.adult));
+        return shows;
     }
 
     async init() {
@@ -144,6 +171,15 @@ class TMDB {
         this.config = data;
         return this;
     }
+    
+    generateAPI(endpoint='', api_key, options=[]) {
+        if(!endpoint) { throw { message: 'GenerateAPI: No endpoint path provided for api generation'}};
+        if(!api_key) { throw { message: 'GenerateAPI: Requires an api key'}}
+        return options.reduce((apiUrl, option) => {
+            return `${apiUrl}&${option.key}=${option.value}`;
+        }, `${this.API_URL}${endpoint}?api_key=${api_key}`);
+    };
+
 }
 
 module.exports = TMDB;

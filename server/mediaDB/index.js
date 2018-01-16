@@ -11,15 +11,24 @@ class MediaDB {
   switchProvider(name) {
     return this.providers.reduce((selectedProvider, provider) => provider.name === name ? provider : selectedProvider);
   }
-  async getPopular(type, options) {
+  async get(mediaType, type, options) {
     const { provider } = this.provider;
-    return provider.getPopular(type, options);
+    console.log('getting: ', mediaType, type);
+    switch(type) {
+      case 'popular':
+        return provider.getPopular(mediaType, options);
+      break;
+      case 'trending': 
+        return provider.getTrending(mediaType, options);
+      break;
+      case 'upcoming':
+        return provider.getUpcoming(mediaType, options);
+      break;
+      default:
+      break;
+    }
   }
 
-  async getTrending(type, options) {
-    const { provider } = this.provider;
-    return provider.getTrending(type, options);
-  }
   async init() {
     this.providers = await Promise.all(
       this.providers.map(async ({name, provider}) =>  ({ name, provider: await provider.init()})

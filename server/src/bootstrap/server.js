@@ -1,8 +1,11 @@
 const express = require('express');
+const cors = require('cors');
+
 
 class Server {
     constructor({ routers = [], services }) {
         this.server = express();
+        this.server.use(cors());
         routers.map(({ path, router }) => { 
             this.server.use(path, router(services))
         });

@@ -11,18 +11,17 @@ class Movies extends Component {
         this.props.fetchMovies(this.props.type);
     }
     render() {
-        return this.props.component(this.props.movies);
+        return this.props.component(this.props.movies[this.props.type]);
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     movies: state.movies
 });
 
 const mapDispatchToProps = dispatch => ({
-    fetchMovies: async (type) => {
-        dispatch(await fetchMovies(type));
-        console.log('test');
+    fetchMovies: async (type, page=1) => {
+        dispatch(await fetchMovies(type, page));
     }
 });
 

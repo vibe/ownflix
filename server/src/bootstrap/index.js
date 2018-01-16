@@ -20,6 +20,9 @@ function bootstrap(server) {
                 services[name] = service;
                 return services;
             }, {});
+
+            console.log('services', services);
+
             const server = new Server({ routers, services });
             return server.init();
         } catch (error) {

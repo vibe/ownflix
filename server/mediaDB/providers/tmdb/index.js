@@ -103,6 +103,14 @@ class TMDB {
         };
     }
 
+    async getUpcoming(type, options = { page: 1, adult: false }) {
+        switch(type) {
+            case 'movies': 
+                return this.getUpcomingMovies(options);
+            default: 
+                throw { message : 'Get Upcoming: Whoops does not match a valid media type!' };
+        }
+    }
     async getPopular(type, options = { page: 1, adult: false }) {
         switch(type) {
             case 'movies':
@@ -128,13 +136,35 @@ class TMDB {
             break;
         }
     }
+    async getUpcoming(options = { page: 1, adult: false }) {
+        console.log('getting upcoming');
+        const { page, adult} = options;
+        const apiRoute = this.generateAPI('movie/upcoming', this.API_KEY, [
+            { key: 'page', value: page },
+            { key: 'region', value: 'us'}
+        ]);
+        console.log(apiRoute);
+        let movies = await axios.get(apiRoute).then(response => adult ? response.data.results : response.data.results.filter(movie => !movie.adult));
+        movies =  movies.reduce((movies, movie) => {
+            movie = { ...movie, 
+                poster_path: `${this.config.images.secure_base_url}original${movie.poster_path}`,
+                backdrop_path:  `${this.config.images.secure_base_url}original${movie.backdrop_path}`,
+            }
+            return [...movies, movie];
+        }, []);
+        // console.log('upcoming: ', movies);
+        return movies;
+    }
 
     async getPopularMovies(options = { page: 1, adult: false }) {
+        console.log('getting popular movies');
         const { page, adult } = options;
         const apiRoute = this.generateAPI('movie/popular', this.API_KEY, [
             { key: 'page', value: page }
         ])
-        const movies = await axios.get(apiRoute).then(response => adult ? response.data.results : response.data.results.filter(movie => !movie.adult));
+        console.log(apiRoute);
+        
+        let movies = await axios.get(apiRoute).then(response => adult ? response.data.results : response.data.results.filter(movie => !movie.adult));
         return movies;
     }
 
@@ -148,11 +178,22 @@ class TMDB {
     }
 
     async getTrendingMovies(options = { page: 1, adult: false }) {
+        console.log('getting trending movies');
+        
         const { page, adult } = options;
         const apiRoute = this.generateAPI('movie/top_rated', this.API_KEY, [
             { key: 'page', value: page }            
         ]);
-        const movies = await axios.get(apiRoute).then(response => adult ? response.data.results : response.data.results.filter(movie => !movie.adult));
+        console.log(apiRoute);
+        let movies = await axios.get(apiRoute).then(response => adult ? response.data.results : response.data.results.filter(movie => !movie.adult));
+        movies =  movies.reduce((movs, movie) => {
+            movie = { ...movie, 
+                poster_path: `${this.config.images.secure_base_url}original/${movie.poster_path}`,
+                backdrop_path:  `${this.config.images.secure_base_url}original/${movie.backdrop_path}`,
+            }
+            return [...movs, movie];
+        }, []);
+        // console.log(movies);
         return movies;
     }
 

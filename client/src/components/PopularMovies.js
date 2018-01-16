@@ -9,7 +9,7 @@ const movies = movies => (
 );
 
 export default props => (
-    <div className="TrendingMovies">
-        <WithMovies type="trending" component={movies} />
+    <div className="PopularMovies">
+        <WithMovies type="popular" component={movies} />
     </div>
 )
